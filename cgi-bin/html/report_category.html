@@ -1,0 +1,20 @@
+<TMPL_INCLUDE NAME="pageHeader.html">
+
+<table class="data_table">
+  <tr>
+    <th id="header-left">Nazwa kategorii</th>
+    <th>&#x015a;rednio <br/>w miesi&#x0105;cu</th>
+    <th id="header-right">&#x0141;&#x0105;cznie <br/>w <TMPL_VAR NAME="YEAR"> r.</th>
+  </tr>
+  
+  <TMPL_LOOP NAME="OUTCOMES">
+    <tr class="<TMPL_VAR NAME="STYLE">">
+      <td><TMPL_VAR NAME="CATEGORY"></td>
+      <td class="value"><TMPL_VAR NAME="MONTHLY"></td>
+      <td class="value"><TMPL_VAR NAME="TOTAL"></td>
+    </tr>
+  </TMPL_LOOP>
+
+</table>
+
+<TMPL_INCLUDE NAME="pageFooter.html">

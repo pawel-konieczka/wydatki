@@ -1,0 +1,39 @@
+<TMPL_INCLUDE NAME="pageHeader.html">
+
+<div>
+<form name="month_selector" method="POST">
+  <input type="hidden" name="rm" value="auth_monthreport_html">
+
+  Wydatki w miesi&#x0105;cu: &nbsp; 
+  <select name="month" onChange="month_selector.submit();">
+    <TMPL_LOOP NAME="MONTHS">
+      <option value="<TMPL_VAR NAME="MONTH_ID">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF>>
+	<TMPL_VAR NAME="MONTH_NAME">
+      </option>
+    </TMPL_LOOP>
+  </select>
+  &nbsp; <TMPL_VAR NAME="YEAR"> r.
+</form>
+</div>
+
+<table class="data_table">
+  <tr>
+    <th id="header-left">Nazwa kategorii</th>
+    <th id="header-right">Wydatki</th>
+  </tr>
+  
+  <TMPL_LOOP NAME="OUTCOMES">
+    <tr class="<TMPL_VAR NAME="STYLE">">
+      <td><TMPL_VAR NAME="CATEGORY"></td>
+      <td class="value"><TMPL_VAR NAME="SUM"></td>
+    </tr>
+  </TMPL_LOOP>
+
+  <tr class="sum">
+    <td>&#x0141;&#x0105;cznie</td>
+    <td class="value"><TMPL_VAR NAME="TOTAL_SUM"></td>
+  </tr>
+
+</table>
+
+<TMPL_INCLUDE NAME="pageFooter.html">

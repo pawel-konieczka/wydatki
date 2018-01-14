@@ -1,0 +1,86 @@
+<TMPL_INCLUDE NAME="pageHeader.html">
+
+<TMPL_IF NAME="ACTION">
+
+<form name="form_edit_item" method="post" action="wydatki.cgi">
+
+  <input type="hidden" name="rm" value="auth_edit_category">
+  <input type="hidden" name="id" value="<TMPL_VAR NAME="ID">">
+  <input type="hidden" name="action" value="<TMPL_VAR NAME="ACTION">">
+
+<table>
+  <tr>
+    <td>Nazwa:</td>
+    <td>
+      <input type="text" name="name" value="<TMPL_VAR NAME="name">">
+    </td>
+  </tr>
+  <tr>
+    <td>Opis:</td>
+    <td>
+      <input type="text" name="description" value="<TMPL_VAR NAME="description">">
+    </td>
+  </tr>
+  <tr>
+    <td>Pozycja:</td>
+    <td>
+	<select name="position"  id="positions">
+	  <TMPL_LOOP NAME="POSITIONS">
+	    <option value="<TMPL_VAR NAME="POSITION">"  <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF>>
+	      <TMPL_VAR NAME="NAME">
+	    </option>
+	  </TMPL_LOOP>
+	</select>
+    </td>
+  </tr>
+</table>
+
+<div id="edit_buttons">
+  <div>
+    <input type="submit" name="save" value="Zapisz">
+    <input type="submit" name="cancel" value="Anuluj">
+  </div>
+</div>
+
+
+
+</form>
+
+<br>
+
+
+</TMPL_IF>
+
+<div id="categories">
+
+<table  class="data_table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nazwa</th>
+      <th>Opis</th>
+      <th>Akcja</th>
+    </tr>
+  </thead>
+  <TMPL_LOOP NAME="CATEGORIES">
+    <tr <TMPL_IF NAME="EDITED">class="marked"</TMPL_IF>>
+      <td><TMPL_VAR NAME="NAME_ID"></td>
+      <td><TMPL_VAR NAME="NAME"></td>
+      <td><TMPL_VAR NAME="DESCRIPTION"></td>
+      <td class="toolbar">
+	<a class="edit" href="?rm=auth_edit_category_html&action=edit&id=<TMPL_VAR NAME="ID">"><span>edytuj</span><div></div></a>
+	<TMPL_UNLESS NAME="USED">
+	  <a class="delete" href="?rm=auth_edit_category&action=delete&id=<TMPL_VAR NAME="ID">"><span>usu&#x0144;</span><div></div></a>
+	</TMPL_UNLESS>
+      </td>
+    </tr>
+  </TMPL_LOOP>
+</table>
+
+<div class="addtoolbar">
+  <a class="add" href="?rm=auth_edit_category_html&action=add&id=<TMPL_VAR NAME="ID">"><span>dodaj&nbsp;nowy</span><div></div></a>
+</div>
+
+</div>
+
+<TMPL_INCLUDE NAME="pageFooter.html">

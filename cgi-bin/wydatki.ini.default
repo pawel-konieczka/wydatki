@@ -1,0 +1,20 @@
+[session]
+name=WYDATKISESSID
+dsn=driver:File
+dsn_args=Directory, /tmp
+
+[application]
+tmpl_path="html/"
+name=Wydatki
+style_path="../../wydatki/css/"
+style_files="base.css", "red-blue.css", "jquery-ui.css"
+script_path="../../wydatki/js/"
+script_files="jquery.js", "autoNumeric.js", "wydatki.js", "jquery-ui.js", "jquery.ui.datepicker-custom-pl.js"
+
+[db]
+host="IP"
+dbname="DB"
+user="USER"
+passwd="PASSWD"
+encoding="utf8"
+version="0.14"

@@ -1,0 +1,29 @@
+<TMPL_INCLUDE NAME="pageHeader.html">
+
+<script>
+  function insert_today() {
+    var d = new Date();
+    $('#date').val(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate());
+  }
+</script>
+
+
+<form name="wprowadzanie" method="post" action="wydatki.cgi">
+  <input type="hidden" name="rm" value="auth_addoutcome">
+
+
+    <TMPL_INCLUDE NAME="_edit_item.html">
+
+<div id="insert_buttons">
+  <div>
+    <input type="submit" value="Zachowaj" tabindex=5>&nbsp;
+    <input type="reset" value="Wyczy&#x015b;&#x0107;" tabindex=6>
+  </div>
+</div>
+
+
+</form>
+
+
+
+<TMPL_INCLUDE NAME="pageFooter.html">

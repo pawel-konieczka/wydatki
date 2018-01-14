@@ -1,0 +1,230 @@
+<TMPL_INCLUDE NAME="pageHeader.html">
+
+<script>
+
+
+var report = new Array();
+
+<TMPL_LOOP NAME="OUTCOMES">
+  report[<TMPL_VAR NAME="NO">] = new Array();
+  report[<TMPL_VAR NAME="NO">][FIELDNAME_ID] = '<TMPL_VAR NAME="ID">';
+  report[<TMPL_VAR NAME="NO">][FIELDNAME_DATE] = '<TMPL_VAR NAME="DATE">';
+  report[<TMPL_VAR NAME="NO">][FIELDNAME_VALUE] = '<TMPL_VAR NAME="VALUE">';
+  report[<TMPL_VAR NAME="NO">][FIELDNAME_DESCR] = '<TMPL_VAR NAME="DESCRIPTION">';
+  report[<TMPL_VAR NAME="NO">][FIELDNAME_CATEGORY] = '<TMPL_VAR NAME="CATEGORY">';
+  report[<TMPL_VAR NAME="NO">][FIELDNAME_AUTHOR] = '<TMPL_VAR NAME="AUTHOR">';
+  report[<TMPL_VAR NAME="NO">][FIELDNAME_DISCOUNT] = '<TMPL_VAR NAME="DISCOUNT">';
+  report[<TMPL_VAR NAME="NO">][FIELDNAME_DETAILS] = '<TMPL_VAR NAME="DETAILS">';
+</TMPL_LOOP>
+
+
+
+</script>
+
+<TMPL_INCLUDE NAME="progressbar.html">
+
+<datalist id="description_list">
+  <TMPL_LOOP NAME="DESCRIPTION_LIST">
+    <option value="<TMPL_VAR NAME="DESCRIPTION">">
+  </TMPL_LOOP>
+</datalist>
+
+
+<form id="filter-form" name="filter" action="wydatki.cgi" method="post" onsubmit="return validateFilter()">
+<input type="hidden" name="rm" value="auth_replist_html">
+<input type="hidden" name="sort_by" value="<TMPL_VAR NAME="SORT_BY">">
+<div id="filter">
+  <div id="filter-month" class="filter-option">
+    <label>Miesi&#x0105;c:</label>
+    <div class="filter-definition">
+    <select name="month">
+      <TMPL_LOOP name="months">
+	<option value="<TMPL_VAR NAME="MONTH">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF>>
+	  <TMPL_VAR NAME="MONTH_NAME">
+	</option>
+      </TMPL_LOOP>
+    </select>
+    </div>
+  </div>
+  <div class="filter-option">
+    <label>Kategoria:</label>
+    <div class="filter-definition">
+    <select name="category">
+      <TMPL_LOOP NAME="CATEGORIES">
+	<option value="<TMPL_VAR NAME="CATEGORY_ID">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF> >
+	  <TMPL_IF NAME="CATEGORY_NAME_ID">
+	    <TMPL_VAR NAME="CATEGORY_NAME_ID">. 
+	  </TMPL_IF>
+	  <TMPL_VAR NAME="CATEGORY_NAME">
+	</option>
+      </TMPL_LOOP>
+    </select>
+    </div>
+  </div>
+
+  <div class="filter-option">
+    <label>Autor:</label>
+    <div class="filter-definition">
+    <select name="user">
+      <TMPL_LOOP NAME="USERS">
+	<option value="<TMPL_VAR NAME="USER_ID">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF>>
+	  <TMPL_VAR NAME="USER_NAME">
+	</option>
+      </TMPL_LOOP>
+    </select>
+    </div>
+  </div>
+
+  <div class="filter-option">
+    <label>Opis:</label>
+    <div class="filter-definition">
+      <input name="description" value="<TMPL_VAR NAME="DESCRIPTION">" list="description_list" autocomplete="off">
+    </div>
+  </div>
+
+</div>
+
+  <div id="extended_filter_link">
+    <span id="show_extended_filter" onclick="showExtendedFilter(1)">Wi&#x0119;cej opcji</span>
+    <span id="hide_extended_filter" onclick="hideExtendedFilter(1)">Mniej opcji</span>
+  </div>
+
+  <div id="extended_filter"> 
+
+    <div class="filter-option">
+      <label>Szczeg&#x00F3;&#x0142;y:</label>
+      <div class="filter-definition">
+	<input name="details" value="<TMPL_VAR NAME="DETAILS">">
+      </div>
+    </div>
+
+    <div id="filter-discount" class="filter-option">
+      <label>Pomijane przy statystykach:</label>
+    <div class="filter-definition">
+    <select name="discount">
+	<option value="0" <TMPL_IF NAME="CHECK_FILTER_DISCOUNT_0">selected="true"</TMPL_IF> >Nie pokazuj</option>
+	<option value="1" <TMPL_IF NAME="CHECK_FILTER_DISCOUNT_1">selected="true"</TMPL_IF> >Tylko pomijane</option>
+	<option value="" <TMPL_IF NAME="CHECK_FILTER_DISCOUNT_NULL">selected="true"</TMPL_IF> >Wszystkie</option>
+    </select>
+    </div>
+    </div>
+
+    <div id="filter-date"  class="filter-option disabled">
+      <input type="hidden" name="date_enabled" value="<TMPL_VAR NAME="DATE_ENABLED">">
+      <label><input id="filter-label" type="checkbox" name="date" onclick="changeFilterDateState()">Tylko wydatki z okresu </input></label>
+    <div class="filter-definition">
+	  <div id="filter-definition" class="inline">
+	    od <input id="filter-date-from" type="text" name="date_from" size="9" disabled value="<TMPL_VAR NAME="DATE_FROM">">
+	    do <input id="filter-date-to" type="text" name="date_to" size="9" disabled value="<TMPL_VAR NAME="DATE_TO">">
+	  </div>
+    </div>
+    </div>
+  </div>
+
+</div>
+
+  <div id="submit_filter">
+    <button type="submit">Filtruj</button>
+    <button type="button" onclick="removeFilter()">Usu&#x0144; filtr</button>
+  </div>
+</form>
+
+
+<table class="data_table" id="outcomes_list">
+  <thead class="sorted">
+  <tr>
+
+    <th id="header-left">
+      <div>
+	Data
+      </div>
+      <div class="sort-buttons">
+	<div class="sort-asc" onclick="sort(FIELDNAME_DATE, 1, $(this))" id="bttn-sort-date-asc"></div>
+	<div class="sort-desc" onclick="sort(FIELDNAME_DATE, 0, $(this))" id="bttn-sort-date-desc"></div>
+      </div>
+    </th>
+
+    <th>
+      <div>
+      Wydatek
+      </div>
+      <div class="sort-buttons">
+	<div class="sort-asc" onclick="sort(FIELDNAME_VALUE, 1, $(this))" id="bttn-sort-value-asc"></div>
+	<div class="sort-desc" onclick="sort(FIELDNAME_VALUE, 0, $(this))" id="bttn-sort-value-desc"></div>
+      </div>
+    </th>
+
+    <th>
+      <div>
+	Opis
+      </div>
+      <div class="sort-buttons">
+	<div class="sort-asc" onclick="sort(FIELDNAME_DESCR, 1, $(this))" id="bttn-sort-description-asc"></div>
+	<div class="sort-desc" onclick="sort(FIELDNAME_DESCR, 0, $(this))" id="bttn-sort-description-desc"></div>
+      </div>
+    </th>
+
+    <th>
+      <div>
+	Kategoria
+      </div>
+      <div class="sort-buttons">
+	<div class="sort-asc" onclick="sort(FIELDNAME_CATEGORY, 1, $(this))" id="bttn-sort-category-asc"></div>
+	<div class="sort-desc" onclick="sort(FIELDNAME_CATEGORY, 0, $(this))" id="bttn-sort-category-desc"></div>
+      </div>
+    </th>
+
+    <th id="header-right">
+      <div>
+	Autor
+      </div>
+      <div class="sort-buttons">
+	<div class="sort-asc" onclick="sort(FIELDNAME_AUTHOR, 1, $(this))" id="bttn-sort-author-asc"></div>
+	<div class="sort-desc" onclick="sort(FIELDNAME_AUTHOR, 0, $(this))" id="bttn-sort-author-desc"></div>
+      </div>
+    </th>
+
+  </tr>
+  </thead>
+
+
+  <tr class="sum">
+    <td>Suma:</td>
+    <td class="value"><TMPL_VAR NAME="TOTAL_SUM"></td>
+    <td colspan="3"></td>
+  </tr>
+  
+</table>
+
+
+<script>
+
+  $('#filter-date-from').datepicker({
+  onClose: function( selectedDate ) {
+  $( "#filter-date-to" ).datepicker( "option", "minDate", selectedDate );
+  }
+});
+  $('#filter-date-to').datepicker({
+  onClose: function( selectedDate ) {
+  $( "#filter-date-from" ).datepicker( "option", "maxDate", selectedDate );
+  }
+});
+
+
+  <TMPL_IF NAME="SHOW_EXTENDED_FILTER">
+    showExtendedFilter();
+  </TMPL_IF>
+
+  changeFilterDateState('<TMPL_VAR NAME="DATE_ENABLED">')
+
+  var sort_by = $("#filter-form input[name=sort_by]").val() || (FIELDNAME_DATE + "-desc");
+  var sort_by_field = sort_by.replace(/^(.*?)-(a|de)sc/, "$1");
+  var asc =  /-asc/.test(sort_by) ? 1 : 0;
+
+  sort(sort_by_field, asc, $('#bttn-sort-' + sort_by));
+
+  displayReplist(report);
+
+</script>
+
+<TMPL_INCLUDE NAME="pageFooter.html">

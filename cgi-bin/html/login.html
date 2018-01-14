@@ -1,0 +1,28 @@
+<TMPL_INCLUDE NAME="_head.html">
+
+<form name="loginform" method="post" action="wydatki.cgi">
+
+  
+  <fieldset>
+    <label for="<TMPL_VAR NAME="CRED_LOGIN">">U&#380;ytkownik</label>
+    <input id="authen_loginfield" tabindex="1" type="text" name="<TMPL_VAR NAME="CRED_LOGIN">" size="20" value="" /><br />
+    <label for="<TMPL_VAR NAME="CRED_PASSWORD">">Has&#322;o</label>
+    <input id="authen_passwordfield" tabindex="2" type="password" name="<TMPL_VAR NAME="CRED_PASSWORD">" size="20" /><br />
+  </fieldset>
+
+  <div id="version_info">
+    <div id="version">Wersja: <TMPL_VAR NAME="VERSION"></div>
+    <div id="date">Data modyfikacji: <TMPL_VAR NAME="MOD_DATE"></div>
+  </div>
+
+  <input id="authen_loginbutton" tabindex="4" type="submit" name="authen_loginbutton" value="Zaloguj" class="button" />
+
+  <input type="hidden" name="rm" value="start" />
+
+</form>
+
+<script>
+  document.loginform.authen_loginfield.focus();
+</script>
+
+<TMPL_INCLUDE NAME="pageFooter.html">

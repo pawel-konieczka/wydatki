@@ -1,0 +1,20 @@
+<TMPL_INCLUDE NAME="pageHeader.html">
+
+<form name="frm_select_year" method="post" action="wydatki.cgi">
+  <input type="hidden" name="rm" value="auth_select_year">
+  Wybierz rok: 
+  <select name="year">
+    <TMPL_LOOP NAME="AVAILABLE_YEARS">
+      <option value="<TMPL_VAR NAME="YEAR">"><TMPL_VAR NAME="YEAR"></option>
+    </TMPL_LOOP>
+  </select>
+
+  <input type="submit" name="save" value="Zmie&#x0144;">
+
+</form>
+
+<script>
+  document.frm_select_year.save.focus();
+</script>
+
+<TMPL_INCLUDE NAME="pageFooter.html">

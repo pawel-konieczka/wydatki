@@ -1,0 +1,24 @@
+<TMPL_INCLUDE NAME="pageHeader.html">
+
+
+<form name="form_edit_item" method="post" action="wydatki.cgi">
+
+  <input type="hidden" name="rm" value="auth_update_item">
+  <input type="hidden" name="id" value="<TMPL_VAR NAME="ID">">
+
+  <TMPL_INCLUDE NAME="_edit_item.html">
+
+<div id="edit_buttons">
+  <div>
+    <input type="submit" name="save" value="Zapisz">
+    <input type="submit" name="cancel" value="Anuluj">
+  </div>
+  <div id="delete">
+    <input type="submit" name="delete" value="Usu&#x0144;">
+  </div>
+</div>
+
+
+</form>
+
+<TMPL_INCLUDE NAME="pageFooter.html">
