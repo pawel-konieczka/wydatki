@@ -1,24 +1,19 @@
 <TMPL_INCLUDE NAME="pageHeader.html">
 
 <script>
+  var report = new Array();
 
-
-var report = new Array();
-
-<TMPL_LOOP NAME="OUTCOMES">
-  report[<TMPL_VAR NAME="NO">] = new Array();
-  report[<TMPL_VAR NAME="NO">][FIELDNAME_ID] = '<TMPL_VAR NAME="ID">';
-  report[<TMPL_VAR NAME="NO">][FIELDNAME_DATE] = '<TMPL_VAR NAME="DATE">';
-  report[<TMPL_VAR NAME="NO">][FIELDNAME_VALUE] = '<TMPL_VAR NAME="VALUE">';
-  report[<TMPL_VAR NAME="NO">][FIELDNAME_DESCR] = '<TMPL_VAR NAME="DESCRIPTION">';
-  report[<TMPL_VAR NAME="NO">][FIELDNAME_CATEGORY] = '<TMPL_VAR NAME="CATEGORY">';
-  report[<TMPL_VAR NAME="NO">][FIELDNAME_AUTHOR] = '<TMPL_VAR NAME="AUTHOR">';
-  report[<TMPL_VAR NAME="NO">][FIELDNAME_DISCOUNT] = '<TMPL_VAR NAME="DISCOUNT">';
-  report[<TMPL_VAR NAME="NO">][FIELDNAME_DETAILS] = '<TMPL_VAR NAME="DETAILS">';
-</TMPL_LOOP>
-
-
-
+  <TMPL_LOOP NAME="OUTCOMES">
+    report[<TMPL_VAR NAME="NO">] = new Array();
+    report[<TMPL_VAR NAME="NO">][FIELDNAME_ID] = '<TMPL_VAR NAME="ID">';
+    report[<TMPL_VAR NAME="NO">][FIELDNAME_DATE] = '<TMPL_VAR NAME="DATE">';
+    report[<TMPL_VAR NAME="NO">][FIELDNAME_VALUE] = '<TMPL_VAR NAME="VALUE">';
+    report[<TMPL_VAR NAME="NO">][FIELDNAME_DESCR] = '<TMPL_VAR NAME="DESCRIPTION">';
+    report[<TMPL_VAR NAME="NO">][FIELDNAME_CATEGORY] = '<TMPL_VAR NAME="CATEGORY">';
+    report[<TMPL_VAR NAME="NO">][FIELDNAME_AUTHOR] = '<TMPL_VAR NAME="AUTHOR">';
+    report[<TMPL_VAR NAME="NO">][FIELDNAME_DISCOUNT] = '<TMPL_VAR NAME="DISCOUNT">';
+    report[<TMPL_VAR NAME="NO">][FIELDNAME_DETAILS] = '<TMPL_VAR NAME="DETAILS">';
+  </TMPL_LOOP>
 </script>
 
 <TMPL_INCLUDE NAME="progressbar.html">
@@ -29,36 +24,48 @@ var report = new Array();
   </TMPL_LOOP>
 </datalist>
 
-
 <form id="filter-form" name="filter" action="wydatki.cgi" method="post" onsubmit="return validateFilter()">
 <input type="hidden" name="rm" value="auth_replist_html">
 <input type="hidden" name="sort_by" value="<TMPL_VAR NAME="SORT_BY">">
 <div id="filter">
+  
   <div id="filter-month" class="filter-option">
-    <label>Miesi&#x0105;c:</label>
+    <label>Miesi&#x0105;c / rok:</label>
     <div class="filter-definition">
-    <select name="month">
-      <TMPL_LOOP name="months">
-	<option value="<TMPL_VAR NAME="MONTH">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF>>
-	  <TMPL_VAR NAME="MONTH_NAME">
-	</option>
-      </TMPL_LOOP>
-    </select>
+      <select name="month">
+        <TMPL_LOOP name="months">
+          <option value="<TMPL_VAR NAME="MONTH">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF> >
+            <TMPL_VAR NAME="MONTH_NAME">
+          </option>
+        </TMPL_LOOP>
+      </select>
+      <select name="year">
+        <TMPL_LOOP name="years">
+          <option value="<TMPL_VAR NAME="YEAR">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF> >
+            <TMPL_VAR NAME="YEAR">
+          </option>
+        </TMPL_LOOP>
+      </select>
     </div>
   </div>
+  
   <div class="filter-option">
     <label>Kategoria:</label>
     <div class="filter-definition">
     <select name="category">
       <TMPL_LOOP NAME="CATEGORIES">
-	<option value="<TMPL_VAR NAME="CATEGORY_ID">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF> >
-	  <TMPL_IF NAME="CATEGORY_NAME_ID">
-	    <TMPL_VAR NAME="CATEGORY_NAME_ID">. 
-	  </TMPL_IF>
-	  <TMPL_VAR NAME="CATEGORY_NAME">
-	</option>
+        <option value="<TMPL_VAR NAME="CATEGORY_ID">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF> >
+          <TMPL_IF NAME="CATEGORY_NAME_ID"><TMPL_VAR NAME="CATEGORY_NAME_ID">. </TMPL_IF><TMPL_VAR NAME="CATEGORY_NAME">
+	      </option>
       </TMPL_LOOP>
     </select>
+    </div>
+  </div>
+
+  <div class="filter-option">
+    <label>Opis / Szczeg&#x00f3;&#x0142;y:</label>
+    <div class="filter-definition">
+      <input name="description" value="<TMPL_VAR NAME="DESCRIPTION">" list="description_list" autocomplete="off">
     </div>
   </div>
 
@@ -67,18 +74,11 @@ var report = new Array();
     <div class="filter-definition">
     <select name="user">
       <TMPL_LOOP NAME="USERS">
-	<option value="<TMPL_VAR NAME="USER_ID">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF>>
-	  <TMPL_VAR NAME="USER_NAME">
-	</option>
+	      <option value="<TMPL_VAR NAME="USER_ID">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF> >
+	        <TMPL_VAR NAME="USER_NAME">
+	      </option>
       </TMPL_LOOP>
     </select>
-    </div>
-  </div>
-
-  <div class="filter-option">
-    <label>Opis:</label>
-    <div class="filter-definition">
-      <input name="description" value="<TMPL_VAR NAME="DESCRIPTION">" list="description_list" autocomplete="off">
     </div>
   </div>
 
@@ -90,13 +90,6 @@ var report = new Array();
   </div>
 
   <div id="extended_filter"> 
-
-    <div class="filter-option">
-      <label>Szczeg&#x00F3;&#x0142;y:</label>
-      <div class="filter-definition">
-	<input name="details" value="<TMPL_VAR NAME="DETAILS">">
-      </div>
-    </div>
 
     <div id="filter-discount" class="filter-option">
       <label>Pomijane przy statystykach:</label>

@@ -1,50 +1,63 @@
-<div id="edit_cl_left">
-<table border=0>
-    <tr>
-      <td>Data:</td>
-      <td>
-	<input id="date" name="date" type="text" value="<TMPL_VAR NAME="DATE">" size="9" tabindex=1 onclick="$(this).datepicker('show');"/> 
-	<button type="button" onclick="insert_today()" tabindex=7 >Dzisiaj</button>
-	(rrrr-mm-dd)
-      </td>
-    </tr>
+<div>
+<table border="0">
+  <tr>
+    <td>Data:</td>
+    <td>
+      <input id="date" name="date" type="text" value="<TMPL_VAR NAME="DATE">" size="10" 
+             tabindex=1 onclick="$(this).datepicker('show');" 
+      /> 
+      <button type="button" onclick="insert_today()" tabindex=7 >Dzisiaj</button>
+      (rrrr-mm-dd)
+    </td>
+  </tr>
 
-    <tr>
-      <td>Opis: </td>
-      <td><input name="description" type="text" value="<TMPL_VAR NAME="DESCRIPTION">" list="description_list" tabindex=2 autocomplete="off" onchange="getCategory(this.value)"/></td>
-    </tr>
+  <tr>
+    <td>Opis: </td>
+    <td>
+      <input name="description" type="text" value="<TMPL_VAR NAME="DESCRIPTION">" maxlength="255" size="30"
+             list="description_list" tabindex=2 autocomplete="off" onchange="getCategory(this.value)" pattern="^.{2,}$"
+      />
+    </td>
+  </tr>
 
-    <tr>
-      <td>Kwota:</td>
-      <td><input type="text" name="value" value="<TMPL_VAR NAME="VALUE">" tabindex=3/></td>
-    </tr>
+  <tr>
+    <td>Kwota:</td>
+    <td>
+      <input type="text" name="value" value="<TMPL_VAR NAME="VALUE">" tabindex=3 size="10" maxlength="10" 
+             style="text-align:right;" pattern="^[0-9]*[,.]{0,1}[0-9]{0,2}$"
+      />
+    </td>
+  </tr>
 
-    <tr>
-      <td>Kategoria</td>
-      <td>
-	<select name="categoryid" tabindex=4 id="categories">
-	  <TMPL_LOOP NAME="CATEGORIES">
-	    <option value="<TMPL_VAR NAME="ID">" title="<TMPL_VAR NAME="DESCRIPTION">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF>>
-	      <TMPL_VAR NAME="NAME_ID">. <TMPL_VAR NAME="NAME">
-	    </option>
-	  </TMPL_LOOP>
-	</select>
-      </td>
-    </tr>
+  <tr>
+    <td>Szczeg&#x00f3;&#x0142;y:</td>
+    <td>
+      <input type="text" name="details" tabindex=4 value="<TMPL_VAR NAME="DETAILS">" maxlength="256" size="30" />
+    </td>
+  </tr>
+
+  <tr>
+    <td>Kategoria</td>
+    <td>
+      <select name="categoryid" tabindex=5 id="categories" style="width: 335px;">
+        <TMPL_LOOP NAME="CATEGORIES">
+          <option value="<TMPL_VAR NAME="ID">" title="<TMPL_VAR NAME="DESCRIPTION">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF>>
+            <TMPL_VAR NAME="NAME_ID">. <TMPL_VAR NAME="NAME">
+          </option>
+        </TMPL_LOOP>
+      </select>
+    </td>
+  </tr>
+  
+  <tr>
+    <td>&nbsp;</td>
+    <td><input id="discount" name="discount" type="checkbox" value="1" tabindex="6"><label for="discount">pomi&#x0144; przy statystykach</label></td>
+  </tr>
 </table>
 </div>
 
-<div id="edit_cl_right">
-Szczeg&#x00f3;&#x0142;y:<br>
-<textarea name="details" tabindex=8 rows=6 cols=30><TMPL_VAR NAME="DETAILS"></textarea>
-<br>
-<input id="discount" name="discount" type="checkbox" value="1" tabindex="9"><label for="discount">pomi&#x0144; przy statystykach</label>
-
-</div>
-
 <script>
-    document.getElementById("discount").checked = <TMPL_IF NAME="DISCOUNT">true<TMPL_ELSE>false</TMPL_IF>;
-
+  document.getElementById("discount").checked = <TMPL_IF NAME="DISCOUNT">true<TMPL_ELSE>false</TMPL_IF>;
 </script>
 
 <datalist id="description_list">
@@ -55,7 +68,7 @@ Szczeg&#x00f3;&#x0142;y:<br>
 
 <script>
  <!--
-     $('#date').focus();
-     $('#date').datepicker();
+   $('#date').focus();
+   $('#date').datepicker();
 //-->
 </script>

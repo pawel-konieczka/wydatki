@@ -29,9 +29,7 @@ var compareAuthor = function(el1, el2) {
 }
 
 function hashCompare(el1, el2, hash) {
-    var res = el1[hash].localeCompare(el2[hash]);
-//    console.log(el1[hash] + ' ' + el2[hash] + ' ' + res);
-    return res;
+    return el1[hash].localeCompare(el2[hash]);
 }
 
 function hashCompareNum(el1, el2, hash) {
@@ -47,8 +45,6 @@ function sort(name, asc, el) {
 }
 
 function sort_async(name, asc) {
-
-
     if(name == FIELDNAME_DATE) {
 	report.sort(compareDate);
     } else if(name == FIELDNAME_VALUE) {
@@ -71,7 +67,6 @@ function sort_async(name, asc) {
 
     updateFilter('sort', name + ( asc == 0 ? '-desc' : '-asc') );
     setProgress('off');
-
 }
 
 function setSortStyle(el, asc) {
@@ -86,7 +81,6 @@ function setSortStyle(el, asc) {
 }
 
 function displayReplist(list) {
-
     var table = $('#outcomes_list');
 
     var sum = table.find('tr:last');
@@ -109,7 +103,6 @@ function displayReplist(list) {
 }
 
 function addRowReplist(table, row, style) {
-
     var tr = $('<tr>').attr('class', style + (row['discount'] == 1 ? ' discounted' : ''));
     
     tr.append($('<td>').text(row[FIELDNAME_DATE]));
@@ -157,7 +150,6 @@ function getCategory(descr) {
 
 
 function updateFilter(filterName, filterValue) {
-
     $.post('', 
 	   {
 	       rm: 'auth_update_filter', 
@@ -167,13 +159,11 @@ function updateFilter(filterName, filterValue) {
 	  );
 }
 
-
 function setProgress(state, message) {
     var pb = $('#progress-bar');
     var visibility = state == 'on' ? 'visible' : (state == 'off' ? 'hidden' : '');
     pb.css("visibility", visibility);
 }
-
 
 function showDetails(element) {
     var nodes = element.find('#details_text');
@@ -189,11 +179,11 @@ function validateFilter() {
 
 function removeFilter() {
     var f = document.filter;
+    f.year.value = (new Date).getFullYear();
     f.month.value = (new Date).getMonth() + 1;
     f.category.value = 0;
     f.user.value = 0;
     f.description.value = "";
-    f.details.value = "";
     f.discount.value = "";
     f.discount[2].checked = true;
     f.date_from.value = "";
@@ -201,7 +191,6 @@ function removeFilter() {
     changeFilterDateState(0);
     f.submit();
 }
-
 
 function showExtendedFilter(updateSession) {
     var showFilter = $('#show_extended_filter');

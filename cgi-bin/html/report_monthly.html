@@ -7,12 +7,18 @@
   Wydatki w miesi&#x0105;cu: &nbsp; 
   <select name="month" onChange="month_selector.submit();">
     <TMPL_LOOP NAME="MONTHS">
-      <option value="<TMPL_VAR NAME="MONTH_ID">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF>>
-	<TMPL_VAR NAME="MONTH_NAME">
+      <option value="<TMPL_VAR NAME="MONTH_ID">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF> >
+	      <TMPL_VAR NAME="MONTH_NAME">
       </option>
     </TMPL_LOOP>
   </select>
-  &nbsp; <TMPL_VAR NAME="YEAR"> r.
+  <select name="year" onChange="month_selector.submit();">
+    <TMPL_LOOP name="YEARS">
+      <option value="<TMPL_VAR NAME="YEAR">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF> >
+        <TMPL_VAR NAME="YEAR">
+      </option>
+    </TMPL_LOOP>
+  </select>
 </form>
 </div>
 

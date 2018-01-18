@@ -13,15 +13,15 @@ sub new {
 
 sub errMsg {
     my ($self, $errMsg) = @_;
+
     $self->{_errMsg} = $errMsg if defined($errMsg);
     return $self->{_errMsg};
 }
 
 sub stringify {
-
     my ($self) = @_;
-    my $class = ref($self) || $self;
-    
+
+    my $class = ref($self) || $self;    
     return $self->errMsg();
 }
 

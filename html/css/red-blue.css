@@ -16,24 +16,8 @@ body {
 }
 
 .data_table th {
-/* IE10 Consumer Preview */ 
-background-image: -ms-linear-gradient(top, #ED5E53 0%, #A21B10 100%);
-
-/* Mozilla Firefox */ 
-background-image: -moz-linear-gradient(top, #ED5E53 0%, #A21B10 100%);
-
-/* Opera */ 
-background-image: -o-linear-gradient(top, #ED5E53 0%, #A21B10 100%);
-
-/* Webkit (Safari/Chrome 10) */ 
-background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ED5E53), color-stop(1, #A21B10));
-
-/* Webkit (Chrome 11+) */ 
-background-image: -webkit-linear-gradient(top, #ED5E53 0%, #A21B10 100%);
-
-/* W3C Markup, IE10 Release Preview */ 
-background-image: linear-gradient(to bottom, #ED5E53 0%, #A21B10 100%);
-color: white;
+    background-image: linear-gradient(to bottom, #ED5E53, #A21B10);
+    color: white;
     border: solid #ba7878 1px;
 }
 
@@ -104,7 +88,9 @@ color: white;
     border: solid #ba7878 1px;
     border-radius: 5px;
 /* Mozilla Firefox */ 
-    background-image: -moz-linear-gradient(top, #ED5E53 0%, #A21B10 100%);
+/*    background-image: -moz-linear-gradient(top, #ED5E53 0%, #A21B10 100%); */
+/* Opera */	
+	background-image: linear-gradient(to bottom, #ED5E53, #A21B10);
     color: #FFF;
 }
 

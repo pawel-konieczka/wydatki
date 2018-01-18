@@ -1,5 +1,21 @@
 <TMPL_INCLUDE NAME="pageHeader.html">
 
+<form id="filter-form" name="filter" action="wydatki.cgi" method="post" >
+  <input type="hidden" name="rm" value="auth_catreport_html">
+  <div id="filter-month" class="filter-option">
+    <label>Rok:</label>
+    <div class="filter-definition">
+      <select name="year" onChange="filter-form.submit();">
+        <TMPL_LOOP name="years">
+          <option value="<TMPL_VAR NAME="YEAR">" <TMPL_IF NAME="SELECTED">selected="true"</TMPL_IF> >
+            <TMPL_VAR NAME="YEAR">
+          </option>
+        </TMPL_LOOP>
+      </select>    
+    </div>
+  </div>
+</form>
+
 <table class="data_table">
   <tr>
     <th id="header-left">Nazwa kategorii</th>
