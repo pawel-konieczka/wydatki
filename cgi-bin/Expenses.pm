@@ -63,10 +63,12 @@ sub auth_insert_html : RunMode {
 
     my $query = $self->query;
     my $date = $query->param('date') || today();
-    my $descr = decode_data($query->param('description')) || '';
+	my $par_descr = $query->param('description') || '';
+    my $descr = decode_data($par_descr);
     my $value = $query->param('value') || '0.00';
     my $categoryid = $query->param('categoryid') || 0;
-    my $details = decode_data($query->param('details')) || '';
+	my $par_details = $query->param('details') || '';
+    my $details = decode_data($par_details);
     my $discount = $query->param('discount') || 0;
     my $categories = $self->get_categories($categoryid);
     my $descr_list = $self->get_descriptions();
@@ -91,7 +93,7 @@ sub auth_addoutcome : RunMode {
 
     my $query = $self->query;
     my $outcome = $self->prepare_outcome();
-    if($outcome eq undef) {
+    if(!defined $outcome) {
         return $self->forward('auth_insert_html');
     }
     $self->param('db')->add_outcome($outcome);
@@ -118,7 +120,7 @@ sub auth_edit_item_html : RunMode {
         DATE => $outcome->{'Date'},
         DESCRIPTION => $outcome->{'Description'},
         DESCRIPTION_LIST => $descr_list,
-        VALUE => sprintf("%.2f", $outcome->{'Value'}),
+        VALUE => valueToStr($outcome->{'Value'}),
         CATEGORIES => $self->get_categories($outcome->{'CategoryID'}),
         DETAILS => $outcome->{'Details'},
         DISCOUNT => $outcome->{'Discount'},
@@ -133,7 +135,7 @@ sub auth_update_item : RunMode {
     my $query = $self->query;
     if($query->param('save')) {
         my $outcome = $self->prepare_outcome();
-        if($outcome eq undef) {
+        if(!defined $outcome) {
             return $self->forward('auth_edit_item_html');
         }
         $self->param('db')->update_outcome($outcome);
@@ -154,7 +156,7 @@ sub auth_replist_html : RunMode {
     my $category = $self->filter_param('category', 0);
     my $user = $self->filter_param('user', 0);
     my $descr = decode_data($self->filter_param('description', ''));
-    my $discounted = $self->filter_param('discount', '');
+    my $discounted = $self->filter_param('discount', 0);
     my $date_from = $self->filter_param('date_from', '');
     my $date_to = $self->filter_param('date_to', '');
     my $date_enabled = $self->filter_param('date_enabled', '');
@@ -176,8 +178,10 @@ sub auth_replist_html : RunMode {
     for my $item (@{$list_ref}) {
         $item->{'description'} = decode_data($item->{'description'});
         $item->{'category'} = decode_data($item->{'category'});
-        $item->{'value'} = sprintf("%.2f", $item->{'value'});
-        $total_sum += $item->{'value'};
+        $item->{'value'} = valueToStr($item->{'value'});
+		if(defined $item->{'value'}) {
+			$total_sum += $item->{'value'};
+		}
         $item->{'details'} = nl2br(decode_data($item->{'details'}));
         $item->{'no'} = $counter;
         ++$counter;
@@ -224,7 +228,7 @@ sub auth_replist_html : RunMode {
         MONTHS => \@months,
         USERS => \@users,
         DESCRIPTION => $descr, DESCRIPTION_LIST => $descr_list,
-        CHECK_FILTER_DISCOUNT_0 => ($discounted == 0 && $discounted ne '') ? 1 : 0,
+        CHECK_FILTER_DISCOUNT_0 => $discounted == 0 ? 1 : 0,
         CHECK_FILTER_DISCOUNT_1 => $discounted == 1 ? 1 : 0,
         CHECK_FILTER_DISCOUNT_NULL => $discounted eq '' ? 1 : 0,
         DATE_FROM => $date_from,
@@ -248,8 +252,8 @@ sub auth_catreport_html : RunMode {
     my $counter = 0;
     for my $item (@{$list_ref}) {
         $item->{'category'} = decode_data($item->{'category'});
-        $item->{'monthly'} = sprintf("%.2f", $item->{'monthly'});
-        $item->{'total'} = sprintf("%.2f", $item->{'total'});
+        $item->{'monthly'} = valueToStr($item->{'monthly'});
+        $item->{'total'} = valueToStr($item->{'total'});
         $item->{'style'} = ($counter % 2) ? 'even' : 'odd';
         $sum_monthly += $item->{'monthly'};
         $sum_total += $item->{'total'};
@@ -304,11 +308,12 @@ sub auth_monthreport_html : RunMode {
     my $counter = 0;
     for my $item (@{$list_ref}) {
         $item->{'category'} = decode_data($item->{'category'});
-        $item->{'sum'} = sprintf("%.2f", $item->{'sum'});
+        $item->{'sum'} = valueToStr($item->{'sum'});
         $item->{'style'} = ($counter % 2) ? 'even' : 'odd';
         ++$counter;
     }
-    my $total_sum = sprintf("%.2f", $self->param('db')->get_total_outcomes_by_month($year, $month));
+	my $tot_val = $self->param('db')->get_total_outcomes_by_month($year, $month);
+    my $total_sum = valueToStr($tot_val);
 
     my $template = $self->get_template('report_monthly.html');
     $template->param(
@@ -331,7 +336,7 @@ sub auth_edit_category_html : RunMode {
     my $categories = $self->get_categories();
     for my $cat (@{$categories}) {
         $cat->{'used'} = $self->param('db')->is_category_used($cat->{'id'});
-        if($cat->{'id'} == $id) {
+        if(defined $id && ($cat->{'id'} == $id)) {
             $cat->{'edited'} = 1;
         }
     }
@@ -340,7 +345,7 @@ sub auth_edit_category_html : RunMode {
     $template->param(PAGE_NAME => 'edycja kategorii');
     $template->param(CATEGORIES => $categories);
 
-    if($action eq 'edit' || $action eq 'add') {
+    if(defined $action && ($action eq 'edit' || $action eq 'add')) {
         $template->param(ACTION => $action);
         my $cat = $self->param('db')->get_category($id);
         $cat->{'Name'} = decode_data($cat->{'Name'});
@@ -376,7 +381,7 @@ sub auth_edit_category : RunMode {
         return $self->redirect('?rm=auth_edit_category_html');
     }
     my $cat = $self->prepare_category();
-    if($cat eq undef) {
+    if(!defined $cat) {
         return $self->forward('auth_edit_category_html');
     }
 
@@ -393,13 +398,15 @@ sub auth_change_passwd_html : RunMode {
     my $self = shift;
     
     my $query = $self->query;
-    my $error = ($query->param('authentication_failed') || $query->param('unmatched_password')) ? 1 : 0;
+	my $par_auth_failed = $query->param('authentication_failed');
+	my $par_unm_paswd = $query->param('unmatched_password');
+    my $error = ($par_auth_failed || $par_unm_paswd) ? 1 : 0;
     my $template = $self->get_template('change_password.html');
     $template->param(
         PAGE_NAME => 'zmiana has&#x0142;a',
         ERROR => $error,
-        AUTHENTICATION_FAILED => $query->param('authentication_failed'),
-        UNMATCHED_PASSWD => $query->param('unmatched_password')
+        AUTHENTICATION_FAILED => $par_auth_failed,
+        UNMATCHED_PASSWD => $par_unm_paswd
     );
     return $template->output();
 }
@@ -555,7 +562,7 @@ sub setup {
     $self->tmpl_path($self->config_param('application.tmpl_path'));
     
     my $user = $self->param('db')->get_user_by_name($self->authen->username);
-    my $user_id = ($user eq undef) ? undef : $user->{'ID'};
+    my $user_id = (!defined $user) ? undef : $user->{'ID'};
 
     my $session = $self->session;
     $session->param('user_id' => $user_id);
@@ -599,7 +606,7 @@ sub get_categories {
     for my $cat (@{$categories}) {
         $cat->{'name'} = decode_data($cat->{'name'});
         $cat->{'description'} = decode_data($cat->{'description'});
-        if ($cat->{'id'} == $current_category) {
+        if (defined $current_category && ($cat->{'id'} == $current_category)) {
             $cat->{'selected'} = 1;
         }
         $cat->{'name_id'} = get_position_name($cat->{'position'});
@@ -748,6 +755,12 @@ sub get_months {
 
     my @month_names = qw(styczeń luty marzec kwiecień maj czerwiec lipiec sierpień wrzesień październik listopad grudzień);
     return \@month_names;
+}
+
+sub valueToStr {
+	my $val = shift;
+	
+	return sprintf("%.2f", (defined $val ? $val : 0));
 }
 
 # end of script

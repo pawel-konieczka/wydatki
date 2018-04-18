@@ -5,8 +5,8 @@ use DBI;
 
 sub check_result {
     my $res = shift;
-    
-    if($res eq undef) {
+	
+    if(!defined $res) {
         die DBI::errstr;
     }
 }
@@ -70,7 +70,7 @@ sub check_user {
     my ($self, $username, $passwd) = @_;
 
     my $user = $self->get_user_by_name($username);
-    return 0 if($user eq undef);
+    return 0 if(!defined $user);
 
     my $sth = $self->{'dbh'}->prepare("SELECT COUNT(*) FROM oc_users WHERE ID=? AND Passwd=PASSWORD(?)");
     $sth->execute($user->{'ID'}, $passwd);
@@ -269,7 +269,7 @@ sub get_outcomes_list {
     my $discount = $args{'discount'};
     my $date_from = $args{'date_from'};
     my $date_to = $args{'date_to'};
-    my $date = ($date_from ne undef && $date_to ne undef);
+    my $date = (defined $date_from && defined $date_to);
 
     my $sql = "SELECT D.id, D.date, D.value, D.description, D.details, U.user as author,  C.name AS category, D.discount" .
         " FROM oc_data D" .
@@ -293,12 +293,12 @@ sub get_outcomes_list {
         $sql .= " AND U.id=?";
         push @sql_params, $user;
     }
-    if($descr ne undef) {
+    if(defined $descr && (length $descr > 0)) {
         $sql .= " AND ((lower(D.description) REGEXP lower(?)) or (D.details is not null and lower(D.details) REGEXP lower(?)))";
         push @sql_params, $descr; # for description
         push @sql_params, $descr; # for details
     }
-    if($discount ne undef) {
+    if(defined $discount) {
         $sql .= " AND D.discount=?";
         push @sql_params, $discount;
     }
@@ -323,7 +323,7 @@ sub get_outcomes_list_by_year {
     
     my $res = $self->{'select_outcomes_by_year_h'}->execute($year);
 
-    if($res eq undef) {
+    if(!defined $res) {
     die DBI::errstr;
     }
 
